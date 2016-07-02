@@ -2172,9 +2172,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	}
 	
 	public function processContainerChange(Inventory $inventory, $slot, Item $newItem, Item $oldItem){
-		if($newItem->getCount() > $newItem->getMaxStackSize() or $newItem->getCount() < 0){
+		/*if($newItem->getCount() > $newItem->getMaxStackSize() or $newItem->getCount() < 0){
 			$this->inventory->sendContents($this);
-		}
+		}*/
 		if($oldItem != $newItem){
 			if($newItem->getId() === 0 and $oldItem->getId() !== 0) {
 				// The entire slot was picked up.
@@ -4049,8 +4049,13 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * @param bool   $notify
 	 */
 	public final function close($message = "", $reason = "generic reason", $notify = true){
-
 		if($this->connected and !$this->closed){
+			//Fix Win10 losing crafting items
+			foreach($this->cachedItems as $item){
+				$this->inventory->addItem($item);
+			}
+			$this->clearCachedItems();
+			
 			if($notify and strlen((string) $reason) > 0){
 				$pk = new DisconnectPacket;
 				$pk->message = $reason;

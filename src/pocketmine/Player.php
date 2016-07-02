@@ -2172,9 +2172,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	}
 	
 	public function processContainerChange(Inventory $inventory, $slot, Item $newItem, Item $oldItem){
-		/*if($newItem->getCount() > $newItem->getMaxStackSize() or $newItem->getCount() < 0){
+		if($newItem->getCount() > $newItem->getMaxStackSize() or $newItem->getCount() < 0){
 			$this->inventory->sendContents($this);
-		}*/
+		}
 		if($oldItem != $newItem){
 			if($newItem->getId() === 0 and $oldItem->getId() !== 0) {
 				// The entire slot was picked up.
@@ -3566,7 +3566,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				// Keep a local copy so we can revert changes if needed
 				$cachedItems = $this->getCachedItems();
 
-				if (empty($packet->input)) {
+				if(empty($packet->input)){
 					// Get a list of recipes that can be used to craft the result.
 					$recipes = $this->server->getCraftingManager()->getRecipesByItem($packet->output[0]);
 					// As soon as a recipe whose ingridients can be satisfied is found,
@@ -3597,11 +3597,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 							}
 						}
 						if ($need !== $have) {
-							// Can't craft
+							//Can't craft
 							$this->setCachedItems($cachedItems);
 							continue;
 						} else {
-							// Reset the recipe to the correct one
+							//Reset the recipe to the correct one
 							$recipe = $r;
 							$canCraft = true;
 							$giveItem = false;
@@ -3726,6 +3726,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				}
 
 				// Avoid item client-sided duplicating in Windows 10 Edition as the item is already created
+				// This fails epically for some reason.
 				if ($giveItem) {
 					$extraItem = $this->inventory->addItem($recipe->getResult());
 					if(count($extraItem) > 0){
